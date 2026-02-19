@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique(map: "username") @db.VarChar(50)
+  passwordHash  String         @map("password_hash") @db.VarChar(255)
+  role          String?        @default("admin") @db.VarChar(50)
+  createdAt     DateTime?      @default(now()) @map("created_at") @db.Timestamp(0)
+  lastLogin     DateTime?      @map("last_login") @db.Timestamp(0)
+  aboutUpdates  AboutContent[]
+  gallery       Gallery[]
+  publications  Publication[]
+  site_settings SiteSetting[]
+  social_links  SocialLink[]
+
+  @@index([username], map: "idx_username")
+  @@map("users")
+}
+
+model AboutContent {
+  id        Int       @id @default(autoincrement())
+  section   String    @default("main") @db.VarChar(50)
+  content   String    @db.Text
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedBy Int?      @map("updated_by")
+  user      User?     @relation(fields: [updatedBy], references: [id], onUpdate: Restrict, map: "about_content_ibfk_1")
+
+  @@index([updatedBy], map: "updated_by")
+  @@map("about_content")
+}
+
+model Gallery {
+  id           Int       @id @default(autoincrement())
+  title        String    @db.VarChar(255)
+  description  String?   @db.Text
+  imageUrl     String    @map("image_url") @db.VarChar(500)
+  thumbnailUrl String?   @map("thumbnail_url") @db.VarChar(500)
+  position     Int?      @default(0)
+  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamp(0)
+  created_by   Int?
+  users        User?     @relation(fields: [created_by], references: [id], onUpdate: Restrict, map: "gallery_ibfk_1")
+
+  @@index([created_by], map: "created_by")
+  @@index([position], map: "idx_position")
+  @@map("gallery")
+}
+
+model Publication {
+  id          Int       @id @default(autoincrement())
+  type        String    @db.VarChar(10)
+  title       String    @default("Sem título") @db.VarChar(255)
+  description String    @db.Text
+  url         String    @db.VarChar(255)
+  created_by  Int?
+  views       Int?      @default(0)
+  clicks      Int?      @default(0)
+  link        String?   @db.VarChar(255)
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt   DateTime? @default(now()) @map("updated_at") @db.Timestamp(0)
+  users       User?     @relation(fields: [created_by], references: [id], onUpdate: Restrict, map: "fk_publications_user")
+
+  @@index([created_by], map: "idx_created_by")
+  @@map("publications")
+}
+
+model SiteSetting {
+  id           Int       @id @default(autoincrement())
+  settingKey   String    @unique(map: "setting_key") @map("setting_key") @db.VarChar(100)
+  settingValue String    @map("setting_value") @db.Text
+  settingType  String?   @default("text") @map("setting_type") @db.VarChar(50)
+  updatedAt    DateTime? @default(now()) @map("updated_at") @db.Timestamp(0)
+  updated_by   Int?
+  users        User?     @relation(fields: [updated_by], references: [id], onUpdate: Restrict, map: "site_settings_ibfk_1")
+
+  @@index([settingKey], map: "idx_key")
+  @@index([updated_by], map: "updated_by")
+  @@map("site_settings")
+}
+
+model SocialLink {
+  id          Int       @id @default(autoincrement())
+  platform    String    @unique(map: "platform") @db.VarChar(50)
+  url         String    @db.VarChar(500)
+  displayName String    @map("display_name") @db.VarChar(100)
+  icon        String?   @db.VarChar(50)
+  isActive    Boolean?  @default(true) @map("is_active")
+  position    Int?      @default(0)
+  updatedAt   DateTime? @default(now()) @map("updated_at") @db.Timestamp(0)
+  updated_by  Int?
+  users       User?     @relation(fields: [updated_by], references: [id], onUpdate: Restrict, map: "social_links_ibfk_1")
+
+  @@index([position], map: "idx_position")
+  @@index([updated_by], map: "updated_by")
+  @@map("social_links")
+}
