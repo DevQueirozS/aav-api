@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -58,12 +59,12 @@ model Gallery {
 }
 
 model AboutContent {
-  id        Int       @id @default(autoincrement())
-  section   String    @default("main") @db.VarChar(50)
-  content   String    @db.Text
-  updatedAt DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
-  updatedBy Int?      @map("updated_by")
-  users     User?     @relation(fields: [updatedBy], references: [id], onUpdate: Restrict, map: "about_content_ibfk_1")
+  id         Int       @id @default(autoincrement())
+  section    String    @unique @db.VarChar(50)
+  content    String    @db.Text
+  updatedAt  DateTime? @default(now()) @map("updated_at") @db.Timestamp(0)
+  updatedBy  Int?      @map("updated_by")
+  user       User?     @relation(fields: [updatedBy], references: [id], onUpdate: Restrict, map: "about_content_ibfk_1")
 
   @@index([updatedBy], map: "updated_by")
   @@map("about_content")

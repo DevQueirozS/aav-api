@@ -11,7 +11,7 @@ export class GalleryService {
   async findAll() {
     return this.prisma.gallery.findMany({
       include: {
-        users: {
+        user: {
           select: {
             id: true,
             username: true,
@@ -33,7 +33,7 @@ export class GalleryService {
     return this.prisma.gallery.findUnique({
       where: { id },
       include: {
-        users: {
+        user: {
           select: {
             id: true,
             username: true,

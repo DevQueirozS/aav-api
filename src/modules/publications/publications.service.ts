@@ -11,7 +11,7 @@ export class PublicationsService {
   async findAll() {
     return this.prisma.publication.findMany({
       include: {
-        users: {
+        user: {
           select: {
             id: true,
             username: true,
@@ -28,7 +28,7 @@ export class PublicationsService {
     return this.prisma.publication.findUnique({
       where: { id },
       include: {
-        users: {
+        user: {
           select: {
             id: true,
             username: true,
