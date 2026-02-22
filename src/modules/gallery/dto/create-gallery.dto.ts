@@ -1,3 +1,4 @@
+// src/modules/gallery/dto/create-gallery.dto.ts
 import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateGalleryDto {
@@ -11,9 +12,11 @@ export class CreateGalleryDto {
   @IsString()
   imageUrl!: string;
 
+  @IsOptional()
   @IsString()
-  thumbnailUrl!: string;
+  thumbnailUrl?: string;
 
+  @IsOptional()
   @IsInt()
-  position!: number;
+  position?: number;
 }

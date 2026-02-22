@@ -1,3 +1,4 @@
+// src/modules/publications/dto/create-publication.dto.ts
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreatePublicationDto {
@@ -7,9 +8,8 @@ export class CreatePublicationDto {
   @IsString()
   title!: string;
 
-  @IsOptional()
   @IsString()
-  description?: string;
+  description!: string;
 
   @IsOptional()
   @IsString()

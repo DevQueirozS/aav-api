@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+// src/modules/gallery/dto/update-gallery.dto.ts
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateGalleryDto } from './create-gallery.dto';
 
